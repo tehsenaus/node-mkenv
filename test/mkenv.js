@@ -26,7 +26,7 @@ describe('mkenv', function () {
 		})
 
 		describe('composition', function () {
-			it('nested envs retrieve values from root', function () {
+			it('allows values to be retrieved from the root', function () {
 				mkenv(
 					{ z: 'y' },
 					mkenv({ 'x': '$z' })
