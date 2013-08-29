@@ -5,19 +5,31 @@ Install:
 Use:
 ```var mkenv = require('mkenv');```
 
- mkenv accepts hashes
+## constructor: mkenv(envs...)
+ constructor: mkenv(envs...) accepts hashes
 
 ```
 mkenv({ x: 'y' })('x').should.equal('y')
 ```
 
 
- mkenv accepts functions
+ constructor: mkenv(envs...) accepts functions
 
 ```
 mkenv(function (name) {
 	return name == 'x' ? 'y' : null;
 })('x').should.equal('y')
+```
+
+
+### composition
+ composition nested envs retrieve values from root
+
+```
+mkenv(
+	{ z: 'y' },
+	mkenv({ 'x': '$z' })
+)('x').should.equal('y')
 ```
 
 

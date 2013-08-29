@@ -14,15 +14,25 @@ describe('mkenv', function () {
 	docha.doc("Install:\n```npm install --save mkenv```");
 	docha.doc("Use:\n```var mkenv = require('mkenv');```");
 
+	describe('constructor: mkenv(envs...)', function () {
+		it('accepts hashes', function () {
+			mkenv({ x: 'y' })('x').should.equal('y')
+		})
 
-	it('accepts hashes', function () {
-		mkenv({ x: 'y' })('x').should.equal('y')
-	})
+		it('accepts functions', function () {
+			mkenv(function (name) {
+				return name == 'x' ? 'y' : null;
+			})('x').should.equal('y')
+		})
 
-	it('accepts functions', function () {
-		mkenv(function (name) {
-			return name == 'x' ? 'y' : null;
-		})('x').should.equal('y')
+		describe('composition', function () {
+			it('nested envs retrieve values from root', function () {
+				mkenv(
+					{ z: 'y' },
+					mkenv({ 'x': '$z' })
+				)('x').should.equal('y')
+			})
+		})
 	})
 
 	describe('string values', function () {

@@ -2,37 +2,42 @@
 module.exports = function () {
 	var chain = [].slice.call(arguments, 0);
 
-	function eval(name) {
-		var value = null;
-		for ( var i = chain.length - 1; value === null && i >= 0; i-- ) {
-			var env = chain[i];
-			if ( typeof env === "function" && env !== eval ) {
-				value = env(name);
-			} else if ( env && env.hasOwnProperty(name) ) {
-				value = env[name];
+	function eval(name, root) {
+		root = root || eval;
+		try {
+			var value = null;
+			for ( var i = chain.length - 1; value === null && i >= 0; i-- ) {
+				var env = chain[i];
+				if ( typeof env === "function" && env !== eval ) {
+					value = env(name, root);
+				} else if ( env && env.hasOwnProperty(name) ) {
+					value = env[name];
+				}
 			}
-		}
 
-		if ( value === null ) return null;
+			if ( value == null ) return null;
 
-		// Simple replacements
-		value = value.replace(/\$([a-zA-Z0-9_]+)/g, function (m, pkey) {
-			return eval(pkey);
-		})
-
-		// Bracketed replacements
-		var numReplacements;
-		do {
-			numReplacements = 0;
-
-			value = value.replace(/\$\{([a-zA-Z0-9_\-\\\/]+)\}/g, function (m, pkey) {
-				numReplacements++;
-				return eval(pkey);
+			// Simple replacements
+			value = value.replace(/\$([a-zA-Z0-9_]+)/g, function (m, pkey) {
+				return root(pkey);
 			})
-		} while (numReplacements > 0);
+
+			// Bracketed replacements
+			var numReplacements;
+			do {
+				numReplacements = 0;
+
+				value = value.replace(/\$\{([a-zA-Z0-9_\-\\\/]+)\}/g, function (m, pkey) {
+					numReplacements++;
+					return eval(pkey);
+				})
+			} while (numReplacements > 0);
 
 
-		return value;
+			return value;
+		} catch (e) {
+			throw new Error("mkenv: evaluation of '" + name + "' failed: " + e.toString())
+		}
 	}
 
 	// Allow overriding variables by assignment
