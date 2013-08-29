@@ -2,7 +2,7 @@
   "name": "mkenv",
   "version": "1.1.0",
   "description": "Parser/template engine for simple enviroment variable-like text replacements",
-  "main": "lib/env.js",
+  "main": "mkenv.js",
   "scripts": {
     "test": "mocha"
   },
