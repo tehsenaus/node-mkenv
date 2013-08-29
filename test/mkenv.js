@@ -32,6 +32,13 @@ describe('mkenv', function () {
 					mkenv({ 'x': '$z' })
 				)('x').should.equal('y')
 			})
+
+			docha.exclude.it('allows bracketed values to be retrieved from the root', function () {
+				mkenv(
+					{ z: 'y' },
+					mkenv({ 'x': '${z}' })
+				)('x').should.equal('y')
+			})
 		})
 	})
 

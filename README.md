@@ -23,7 +23,7 @@ mkenv(function (name) {
 
 
 ### composition
- composition nested envs retrieve values from root
+ composition allows values to be retrieved from the root
 
 ```
 mkenv(

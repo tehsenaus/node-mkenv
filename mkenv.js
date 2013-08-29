@@ -29,7 +29,7 @@ module.exports = function () {
 
 				value = value.replace(/\$\{([a-zA-Z0-9_\-\\\/]+)\}/g, function (m, pkey) {
 					numReplacements++;
-					return eval(pkey);
+					return root(pkey);
 				})
 			} while (numReplacements > 0);
 
