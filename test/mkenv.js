@@ -42,18 +42,24 @@ describe('mkenv', function () {
 		})
 	})
 
-	describe('string values', function () {
-		it('can be retrieved', function () {
+	describe('value retrieval', function () {
+		it('works by calling the env with a key', function () {
 			mkenv({ x: 'y' })('x').should.equal('y')
 		})
 
-		it('can be overridden', function () {
+		it('gives the rightmost value (overriding)', function () {
 			mkenv({ x: 'y' }, { x: 'z'})('x').should.equal('z')
+		})
+
+		it('returns null on an unknown key', function () {
+			should.equal(
+				mkenv({ x: 'y' })('z'), null
+			)
 		})
 	});
 
 	describe('simple replacements', function () {
-		it('are made', function () {
+		it('can be made', function () {
 			mkenv({
 				x: 'y',
 				y: '$x'
@@ -78,7 +84,7 @@ describe('mkenv', function () {
 	});
 
 	describe('bracketed replacements', function () {
-		it('are made', function () {
+		it('can be made', function () {
 			mkenv({
 				x: 'y',
 				y: '${x}'
@@ -103,7 +109,7 @@ describe('mkenv', function () {
 		})
 	})
 
-	describe('#keys', function () {
+	describe('mkenv.keys(env)', function () {
 		it('returns the keys stored in an env', function () {
 			mkenv.keys(
 				mkenv({ x: 'y' }, { y: 'z'})
@@ -123,7 +129,7 @@ describe('mkenv', function () {
 		})
 	})
 
-	describe('#vars', function () {
+	describe('mkenv.vars(env)', function () {
 		it('returns the vars stored in an env', function () {
 			mkenv.vars(
 				mkenv({ x: 'y' }, { y: 'z'})

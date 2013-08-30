@@ -33,23 +33,32 @@ mkenv(
 ```
 
 
-## string values
- string values can be retrieved
+## value retrieval
+ value retrieval works by calling the env with a key
 
 ```
 mkenv({ x: 'y' })('x').should.equal('y')
 ```
 
 
- string values can be overridden
+ value retrieval gives the rightmost value (overriding)
 
 ```
 mkenv({ x: 'y' }, { x: 'z'})('x').should.equal('z')
 ```
 
 
+ value retrieval returns null on an unknown key
+
+```
+should.equal(
+	mkenv({ x: 'y' })('z'), null
+)
+```
+
+
 ## simple replacements
- simple replacements are made
+ simple replacements can be made
 
 ```
 mkenv({
@@ -82,7 +91,7 @@ mkenv({
 
 
 ## bracketed replacements
- bracketed replacements are made
+ bracketed replacements can be made
 
 ```
 mkenv({
@@ -115,8 +124,8 @@ mkenv({
 ```
 
 
-## #keys
- #keys returns the keys stored in an env
+## mkenv.keys(env)
+ mkenv.keys(env) returns the keys stored in an env
 
 ```
 mkenv.keys(
@@ -125,7 +134,7 @@ mkenv.keys(
 ```
 
 
- #keys returns the keys stored in a nested env
+ mkenv.keys(env) returns the keys stored in a nested env
 
 ```
 mkenv.keys(
@@ -134,7 +143,7 @@ mkenv.keys(
 ```
 
 
- #keys returns additional keys
+ mkenv.keys(env) returns additional keys
 
 ```
 var env = mkenv({ x: 'y' });
@@ -143,8 +152,8 @@ mkenv.keys(env).should.eql(['x', 'y'])
 ```
 
 
-## #vars
- #vars returns the vars stored in an env
+## mkenv.vars(env)
+ mkenv.vars(env) returns the vars stored in an env
 
 ```
 mkenv.vars(
@@ -153,7 +162,7 @@ mkenv.vars(
 ```
 
 
- #vars returns the vars stored in a nested env
+ mkenv.vars(env) returns the vars stored in a nested env
 
 ```
 mkenv.vars(
@@ -162,7 +171,7 @@ mkenv.vars(
 ```
 
 
- #vars returns additional keys
+ mkenv.vars(env) returns additional keys
 
 ```
 var env = mkenv({ x: 'y' });
