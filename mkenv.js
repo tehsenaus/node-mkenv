@@ -19,7 +19,8 @@ module.exports = function () {
 
 			// Simple replacements
 			value = value.replace(/\$([a-zA-Z0-9_]+)/g, function (m, pkey) {
-				return root(pkey);
+				var v = root(pkey);
+				return v === null || v === undefined ? '' : v;
 			})
 
 			// Bracketed replacements
@@ -29,7 +30,8 @@ module.exports = function () {
 
 				value = value.replace(/\$\{([a-zA-Z0-9_\-\\\/]+)\}/g, function (m, pkey) {
 					numReplacements++;
-					return root(pkey);
+					var v = root(pkey);
+					return v === null || v === undefined ? '' : v;
 				})
 			} while (numReplacements > 0);
 

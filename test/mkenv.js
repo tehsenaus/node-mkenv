@@ -81,6 +81,12 @@ describe('mkenv', function () {
 				w: '$z'
 			})('w').should.equal('y')
 		})
+
+		docha.exclude.it('returns falsy value on unknown key', function () {
+			should.ok( !mkenv({
+				w: '$z'
+			})('w') );
+		})
 	});
 
 	describe('bracketed replacements', function () {
