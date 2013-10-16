@@ -180,6 +180,30 @@ mkenv.vars(env).should.eql({ x: 'y', y: 'z'})
 ```
 
 
+## mkenv.hidden(env)
+ mkenv.hidden(env) allows values to be retrieved from the root
+
+```
+mkenv(
+	mkenv.hidden({ z: 'y' }),
+	mkenv({ 'x': '$z' })
+)('x').should.equal('y')
+```
+
+
+ mkenv.hidden(env) doesn't allow direct retrieval from the root
+
+```
+should.equal(
+	mkenv(
+		mkenv.hidden({ z: 'y' }),
+		mkenv({ 'x': '${z}' })
+	)('z'),
+	null
+)
+```
+
+
 
 
 

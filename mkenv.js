@@ -1,15 +1,16 @@
 
-module.exports = function () {
+var mkenv = module.exports = function () {
 	var chain = [].slice.call(arguments, 0);
 
-	function eval(name, root) {
+	function eval(name, root, depth) {
 		root = root || eval;
+		depth = depth || 0;
 		try {
 			var value = null;
 			for ( var i = chain.length - 1; value === null && i >= 0; i-- ) {
 				var env = chain[i];
 				if ( typeof env === "function" && env !== eval ) {
-					value = env(name, root);
+					value = env(name, root, depth);
 				} else if ( env && env.hasOwnProperty(name) ) {
 					value = env[name];
 				}
@@ -19,7 +20,7 @@ module.exports = function () {
 
 			// Simple replacements
 			value = value.replace(/\$([a-zA-Z0-9_]+)/g, function (m, pkey) {
-				var v = root(pkey);
+				var v = root(pkey, root, depth + 1);
 				return v === null || v === undefined ? '' : v;
 			})
 
@@ -30,7 +31,7 @@ module.exports = function () {
 
 				value = value.replace(/\$\{([a-zA-Z0-9_\-\\\/]+)\}/g, function (m, pkey) {
 					numReplacements++;
-					var v = root(pkey);
+					var v = root(pkey, root, depth + 1);
 					return v === null || v === undefined ? '' : v;
 				})
 			} while (numReplacements > 0);
@@ -72,12 +73,20 @@ function getKeys(env) {
 
 	return Object.keys(keys);
 }
-module.exports.keys = getKeys;
+mkenv.keys = getKeys;
 
-module.exports.vars = function vars(env) {
+mkenv.vars = function vars(env) {
 	var vars = {};
 	getKeys(env).forEach(function (key) {
 		vars[key] = env(key);
 	});
 	return vars;
+}
+
+
+mkenv.hidden = function hidden(env) {
+	env = mkenv(env);
+	return function (key, root, depth) {
+		return depth ? env(key, root) : null;
+	}
 }
